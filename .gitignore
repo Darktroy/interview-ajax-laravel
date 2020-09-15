@@ -12,3 +12,9 @@ npm-debug.log
 yarn-error.log
 composer.json
 /resources/laravel-code-generator
+/resources/views/order_items
+/resources/views/orders
+/resources/views/items
+/resources/views/category_items
+/resources/views/categories
+
