@@ -1,0 +1,22 @@
+[
+    {
+        "model-name": "orders",
+        "resource-file": "orders.json"
+    },
+    {
+        "model-name": "order_items",
+        "resource-file": "order_items.json"
+    },
+    {
+        "model-name": "category",
+        "resource-file": "categories.json"
+    },
+    {
+        "model-name": "category_items",
+        "resource-file": "category_items.json"
+    },
+    {
+        "model-name": "Items",
+        "resource-file": "items.json"
+    }
+]
