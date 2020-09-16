@@ -58,6 +58,24 @@ class ItemsController extends Controller
                 ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
         }
     }
+    
+    public function jssession(Request $request)
+    {
+        dd(15);
+        try {
+            
+            $data = $this->getData($request);
+            
+            Items::create($data);
+
+            return redirect()->route('items.items.index')
+                ->with('success_message', 'Items was successfully added.');
+        } catch (Exception $exception) {
+
+            return back()->withInput()
+                ->withErrors(['unexpected_error' => 'Unexpected error occurred while trying to process your request.']);
+        }
+    }
 
     /**
      * Display the specified items.

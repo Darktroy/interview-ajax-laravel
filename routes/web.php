@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\CategoryItemsController;
 use App\Http\Controllers\OrderItemsController;
+use App\Http\Controllers\ItemsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,6 +18,9 @@ use App\Http\Controllers\OrderItemsController;
 */
 
 Route::get('/',[CategoriesController::class,'index'] );
+Route::post('/jssession',[ItemsController::class,'jssession'] );
+Route::get('/jssession2',[ItemsController::class,'jssession'] );
+Route::get('/test',[ItemsController::class,'jssession'] );
 /*
 Route::group([
     'prefix' => 'categories',
@@ -93,7 +97,6 @@ Route::group([
     Route::delete('/order_items/{orderItems}','OrderItemsController@destroy')
          ->name('order_items.order_items.destroy')->where('id', '[0-9]+');
 });
-*/
 Route::group([
     'prefix' => 'items',
 ], function () {
@@ -112,3 +115,5 @@ Route::group([
     Route::delete('/items/{items}','ItemsController@destroy')
          ->name('items.items.destroy')->where('id', '[0-9]+');
 });
+
+*/

@@ -1,5 +1,9 @@
 <!DOCTYPE html>
-
+<!--@if(session('name1')!== null)-->
+<!--<h1>is not equal null</h1>-->
+<!--@else-->
+<!--<h1>is null</h1>-->
+<!--@endif-->
 <html lang="zxx">
 
 <head>
@@ -23,6 +27,72 @@
     <link rel="stylesheet" href="{{ asset('fashi/css/jquery-ui.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('fashi/css/slicknav.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('fashi/css/style.css') }}" type="text/css">
+    <script>
+            function showEditBox(editobj, id) {
+                $('#frmAdd').hide();
+                $(editobj).prop('disabled', 'true');
+                var currentMessage = $("#message_" + id + " .message-content").html();
+                var editMarkUp = '<textarea rows="5" cols="80" id="txtmessage_' + id + '">' + currentMessage + '</textarea><button name="ok" onClick="callCrudAction(\'edit\',' + id + ')">Save</button><button name="cancel" onClick="cancelEdit(\'' + currentMessage + '\',' + id + ')">Cancel</button>';
+                $("#message_" + id + " .message-content").html(editMarkUp);
+            }
+            function cancelEdit(message, id) {
+                $("#message_" + id + " .message-content").html(message);
+                $('#frmAdd').show();
+            }
+            function cartAction(action, p_id,p_title,p_image,p_price) {
+                var queryString = "";
+                if (action != "") {
+                    switch (action) {
+                        case "add":
+                             var item = {id:p_id, title:p_title,image:p_image,price:p_price}; 
+                             console.log(item);
+                            break;
+                        case "remove":
+                            queryString = 'action=' + action + '&code=' + product_code;
+                            break;
+                        case "empty":
+                            queryString = 'action=' + action;
+                            break;
+                    }
+                }
+                  $.ajaxSetup({
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                        }
+                    });
+                jQuery.ajax({
+                    url:  "{{ url('/jssession') }}",
+                      data: {
+                     id:p_id, 
+                     title:p_title,
+                     image:p_image,
+                     price:p_price,
+                     qut: jQuery('#quantity_'+p_id).val()
+                  },
+                    type: "POST",
+                    success: function (data) {
+                        $("#cart-item").html(data);
+                        if (action != "") {
+                            switch (action) {
+                                case "add":
+                                    $("#add_" + product_code).hide();
+                                    $("#added_" + product_code).show();
+                                    break;
+                                case "remove":
+                                    $("#add_" + product_code).show();
+                                    $("#added_" + product_code).hide();
+                                    break;
+                                case "empty":
+                                    $(".btnAddAction").show();
+                                    $(".btnAdded").hide();
+                                    break;
+                            }
+                        }
+                    },
+                    error: function () {}
+                });
+            }
+        </script>
 </head>
 
 <body>
@@ -35,17 +105,10 @@
     <header class="header-section">
         <!--<div class="header-top">-->
             <div class="container">
-<!--                <div class="ht-left">
-                    <div class="mail-service">
-                        <i class=" fa fa-envelope"></i>
-                        hello.colorlib@gmail.com
-                    </div>
-                    <div class="phone-service">
-                        <i class=" fa fa-phone"></i>
-                        +65 11.188.888
-                    </div>
-                </div>-->
-                
+                   <?php $url  = \URL::current();
+
+                    print_r($url);
+                ?>
             </div>
         </div>
         <div class="container">
@@ -192,13 +255,13 @@
                             @foreach ($categories as $category)
 
                             <h4>{{$category['name']}}</h4>
-                            <ul>
-                            @if (count($category['items'])>0)
+                            <!--<ul>-->
+<!--                            @if (count($category['items'])>0)
                                  @foreach ($category['items'] as $item)  
                                  <li><a >{{$item['title']}}</a></li>
                                  @endforeach
-                            @endif
-                            </ul>
+                            @endif-->
+                            <!--</ul>-->
                                 
                             @endforeach
                             
@@ -220,10 +283,14 @@
                                     <ul>
                                         <li class="w-icon active">
                                             <a >
-                                                <i class="icon_bag_alt"></i>
+                                                
+                                                <i class="icon_bag_alt" onClick = "cartAction('add',
+                                                   '{{$item["id"]}}','{{$item["title"]}}', 
+                                                   '{{$item["image"]}}', 
+                                                  {{$item["price_per_one"]}})" ></i>
                                             </a>
                                         </li>
-                                        <li class="cart-price"><input type="number" ></li>
+                                        <li class="cart-price"><input type="number" id='quantity_{{$item["id"]}}'></li>
                                     </ul>
                                 </div>
                                
